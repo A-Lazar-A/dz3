@@ -1,0 +1,3 @@
+/home/nikita/CLionProjects/dz3/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/nikita/CLionProjects/dz3/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/nikita/CLionProjects/dz3/cmake-build-debug/CMakeFiles/dz3.dir
