@@ -88,6 +88,10 @@ double counter(std::string input) {
     std::stack<double> numbers;
     std::stack<char> operations;
     bool unMinus = true;//костыль но я не знаю как еще это написать
+    if(input.find("inf")!=std::string::npos){
+        std::cout<<"Division by zero"<<std::endl;
+        return 0;
+    }
     for (int i = 0; i < static_cast<int>(input.length()); i++) {
         if (isSeparator(input[i])) {
             continue;
@@ -111,7 +115,7 @@ double counter(std::string input) {
                     numbers.pop();
                     double result = doIt(operations.top(), first, second);
                     if (std::isinf(result)) {
-                        std::cout << "Division by zero";
+                        std::cout << "Division by zero"<<std::endl;
                         return 0;
                     }
                     numbers.push(result);
@@ -222,7 +226,7 @@ int main() {
                 input.replace(i-3, sub.length() + 3, '('+std::to_string(std::tan(counter(sub)))+')');
             } else if (buf == "ctg"){
                 std::string sub = trigonometry(input, i-3);
-                input.replace(i-3, sub.length() + 3, '('+std::to_string(std::tan(M_PI / 2 - counter(sub)))+')');
+                input.replace(i-3, sub.length() + 3, '('+std::to_string(1/std::tan(counter(sub)))+')');
             } else if (buf == "sqr"){
                 std::string sub = trigonometry(input, i-3);
                 double res = counter(sub);
