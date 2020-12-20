@@ -1,13 +1,3 @@
-//     ==                      ==                ==        ==========        ==        ======                         ==
-//   ==  ==                    ==              ==  ==              ==      ==  ==      ==    ==                     ==  ==
-// ==      ==                  ==            ==      ==          ==      ==      ==    ==     ==                  ==      ==
-// ==      ==                  ==            ==      ==        ==        ==      ==    ==    ==                   ==      ==
-// ==========    ==========    ==            ==========      ==          ==========    ======       ==========    ==========
-// ==      ==                  ==            ==      ==    ==            ==      ==    ==    ==                   ==      ==
-// ==      ==                  ==========    ==      ==    ==========    ==      ==    ==     ==                  ==      ==
-
-
-
 #include <iostream>
 #include <stack>
 #include <cmath>
@@ -59,7 +49,7 @@ bool isOperator(char s) {
     }
 }
 
-float doIt(char s, float a, float b) {
+double doIt(char s, double a, double b) {
     switch (s) {
         case '+':
             return a + b;
@@ -87,14 +77,15 @@ std::string trigonometry(std::string input, int buf) {
         }
         i += 1;
     }
+
     std::string sub = input.substr(buf + 3, i - buf - 3);
     return sub;
 }
 
-float counter(std::string input) {
-    std::map<std::string, float> constants{{"pi", M_PI},
+double counter(std::string input) {
+    std::map<std::string, double> constants{{"pi", M_PI},
                                            {"e", exp(1)}};
-    std::stack<float> numbers;
+    std::stack<double> numbers;
     std::stack<char> operations;
     bool unMinus = true;//костыль но я не знаю как еще это написать
     for (int i = 0; i < static_cast<int>(input.length()); i++) {
@@ -114,11 +105,11 @@ float counter(std::string input) {
                 unMinus = true;
             } else if (input[i] == ')') {
                 while (operations.top() != '(') {
-                    float second = numbers.top();
+                    double second = numbers.top();
                     numbers.pop();
-                    float first = numbers.top();
+                    double first = numbers.top();
                     numbers.pop();
-                    float result = doIt(operations.top(), first, second);
+                    double result = doIt(operations.top(), first, second);
                     if (std::isinf(result)) {
                         std::cout << "Division by zero";
                         return 0;
@@ -134,11 +125,11 @@ float counter(std::string input) {
             } else if (priority(input[i]) > priority(operations.top()) || operations.top() == '(') {
                 operations.push(input[i]);
             } else {
-                float second = numbers.top();
+                double second = numbers.top();
                 numbers.pop();
-                float first = numbers.top();
+                double first = numbers.top();
                 numbers.pop();
-                float result = doIt(operations.top(), first, second);
+                double result = doIt(operations.top(), first, second);
                 if (std::isinf(result)) {
                     std::cout << "Division by zero";
                     return 0;
@@ -172,11 +163,11 @@ float counter(std::string input) {
     }
 
     while (!operations.empty()) {
-        float second = numbers.top();
+        double second = numbers.top();
         numbers.pop();
-        float first = numbers.top();
+        double first = numbers.top();
         numbers.pop();
-        float result = doIt(operations.top(), first, second);
+        double result = doIt(operations.top(), first, second);
         if (std::isinf(result)) {
             std::cout << "Division by zero";
             return 0;
@@ -198,58 +189,53 @@ int main() {
     std::cout << "Capabilities" << std::endl;
     std::cout << "sqr(), sin(), cos(), tan(), ctg()" << std::endl;
     std::cout << "Variable x (only lowercase)" << std::endl;
-    std::cout << "Float with dot NOT comma" << std::endl;
+    std::cout << "double with dot NOT comma" << std::endl;
     getline(std::cin, input);
 
     if (error(input)) {
         std::cout << "Syntax error";
         return 0;
     }
-    int buf = input.find("sqr");
-    while (buf != std::string::npos) {
-        std::string sub = trigonometry(input, buf);
-        float res = counter(sub);
-        if (res<0){
-            std::cout << "Error";
-            return 0;
-        }
-        input.replace(buf, sub.length() + 3, std::to_string(std::sqrt(res)));
-        buf = input.find("sqr");
-    }
-    buf = input.find("sin");
-    while (buf != std::string::npos) {
-        std::string sub = trigonometry(input, buf);
-        input.replace(buf, sub.length() + 3, '('+std::to_string(std::sin(counter(sub)))+')');
-        buf = input.find("sin");
-    }
-    buf = input.find("tan");
-    while (buf != std::string::npos) {
-        std::string sub = trigonometry(input, buf);
-        input.replace(buf, sub.length() + 3, '('+std::to_string(std::sin(counter(sub)))+')');
-        buf = input.find("tan");
-    }
-    buf = input.find("cos");
-    while (buf != std::string::npos) {
-        std::string sub = trigonometry(input, buf);
-        input.replace(buf, sub.length() + 3, '('+std::to_string(std::sin(counter(sub)))+')');
-        buf = input.find("cos");
-    }
-    buf = input.find("ctg");
-    while (buf != std::string::npos) {
-        std::string sub = trigonometry(input, buf);
-        input.replace(buf, sub.length() + 3, '('+std::to_string(std::tan(M_PI / 2 - counter(sub)))+')');
-        buf = input.find("ctg");
-    }
-    buf = input.find('x');
-    float x;
+    int buf = input.find('x');
+    std::string x;
     if (buf != std::string::npos) {
         std::cout << "Введите Х" << std::endl;
         std::cin >> x;
     }
     while (buf != std::string::npos) {
-        input.replace(buf, 1, '('+std::to_string(x)+')');
+        input.replace(buf, 1, '('+std::to_string(counter(x))+')');
         buf = input.find('x');
     }
+
+
+  for (int i=input.length(); i>2; i--) {
+            std::string buf;
+            buf = input.substr(i-3,3);
+            if (buf == "sin"){
+                std::string sub = trigonometry(input, i-3);
+                input.replace(i-3, sub.length() + 3, '('+std::to_string(std::sin(counter(sub)))+')');
+            } else if (buf == "cos"){
+                std::string sub = trigonometry(input, i);
+                input.replace(i, sub.length() + 3, '('+std::to_string(std::cos(counter(sub)))+')');
+            } else if (buf == "tan"){
+                std::string sub = trigonometry(input, i-3);
+                input.replace(i-3, sub.length() + 3, '('+std::to_string(std::tan(counter(sub)))+')');
+            } else if (buf == "ctg"){
+                std::string sub = trigonometry(input, i);
+                input.replace(i, sub.length() + 3, '('+std::to_string(std::tan(M_PI / 2 - counter(sub)))+')');
+            } else if (buf == "sqr"){
+                std::string sub = trigonometry(input, i);
+                double res = counter(sub);
+                if (res<0){
+                    std::cout << "Error";
+                    return 0;
+                }
+                input.replace(i, sub.length() + 3, std::to_string(std::sqrt(res)));
+            }
+        }
+
+
+
     std::cout << counter(input);
 }
 
