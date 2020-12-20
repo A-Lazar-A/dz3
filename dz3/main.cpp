@@ -215,22 +215,22 @@ int main() {
                 std::string sub = trigonometry(input, i-3);
                 input.replace(i-3, sub.length() + 3, '('+std::to_string(std::sin(counter(sub)))+')');
             } else if (buf == "cos"){
-                std::string sub = trigonometry(input, i);
-                input.replace(i, sub.length() + 3, '('+std::to_string(std::cos(counter(sub)))+')');
+                std::string sub = trigonometry(input, i-3);
+                input.replace(i-3, sub.length() + 3, '('+std::to_string(std::cos(counter(sub)))+')');
             } else if (buf == "tan"){
                 std::string sub = trigonometry(input, i-3);
                 input.replace(i-3, sub.length() + 3, '('+std::to_string(std::tan(counter(sub)))+')');
             } else if (buf == "ctg"){
-                std::string sub = trigonometry(input, i);
-                input.replace(i, sub.length() + 3, '('+std::to_string(std::tan(M_PI / 2 - counter(sub)))+')');
+                std::string sub = trigonometry(input, i-3);
+                input.replace(i-3, sub.length() + 3, '('+std::to_string(std::tan(M_PI / 2 - counter(sub)))+')');
             } else if (buf == "sqr"){
-                std::string sub = trigonometry(input, i);
+                std::string sub = trigonometry(input, i-3);
                 double res = counter(sub);
                 if (res<0){
                     std::cout << "Error";
                     return 0;
                 }
-                input.replace(i, sub.length() + 3, std::to_string(std::sqrt(res)));
+                input.replace(i-3, sub.length() + 3, std::to_string(std::sqrt(res)));
             }
         }
 
